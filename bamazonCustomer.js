@@ -83,42 +83,45 @@ function buyProduct() {
 
             if (results[i].item_id === parseInt(answer.id_item)) {
               var chosenItem = results[i].item_id;
+              console.log (chosenItem);
               var chosenStock = results[i].stock_quantity;
-              
+              console.log(chosenStock);
+
+              if (chosenStock >= parseInt(answer.amount)){
+                console.log (chosenStock- answer.amount);
+                var newQuantity = chosenStock- answer.amount;
+
+                connection.query(
+                  "UPDATE products SET ? WHERE ?", [{
+                    stock_quantity: newQuantity
+                  },
+                {
+                  item_id: answer.id_item
+                }
+                ],
+
+                function (err) {
+                  if (err) throw err;
+                  console.log("Purchase completed! There are now " + newQuantity + " remaining")
+                }
+
+                )
+
+
+              }
+            }
+
+            // else{
+            //   console.log ("The item number you entered was not found. Please try again.")
+
+            // }
+
               // console.log (results[i].item_id + " & " + answer.id_item);
               // purchaseSuccess();
-            };
 
 
             function purchaseSuccess() {
-              connection.query("SELECT * FROM products", function (err, results) {
-                if (err) throw err;
-                for (var i = 0; i < results.length; i++){
-
-                  console.log(results[i].stock_quantity);
-                  
-                  if (results[i].stock_quantity <= parseInt(answer.amount)) {
-                    //if there are enough, create a new variable to reduce the stock amount
-                    var newStockQuantity = results[i].stock_quantity - answer.amount;
-                    
-                    //update the database with the new quantity amount
-                    connection.query(
-                      "UPDATE products SET ? WHERE ?", [{
-                        stock_quantity: newStockQuantity
-                      },
-                      {
-                        item_id: answer.id_item
-                      }
-                    ],
-                    function (err) {
-                      if (err) throw err;
-                      console.log("Purchase completed! There are now " + newStockQuantity + " remaining")
-                    }
-                    );
-                  }
-                }
-                }
-                );
+              
 
                 //Calculate purchase price based on the item ID that was selected
                 connection.query("SELECT price FROM products WHERE ?", [
