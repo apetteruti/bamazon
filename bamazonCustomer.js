@@ -57,10 +57,8 @@ connection.connect(function (err) {
 });
 
 
-
 function buyProduct() {
   
-
   inquirer.prompt([{
 
       name: "id_item",
@@ -131,6 +129,7 @@ function buyProduct() {
                     if (err) throw err;
                     var cost = chosenPrice * answer.amount;
                     console.log("Your total cost is $" + cost);
+                    connection.end();
                   }
                   //create variable to hold the price amount and then report it
                 ); 

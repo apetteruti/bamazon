@@ -3,7 +3,7 @@ var inquirer = require("inquirer");
 var Table = require("cli-table");
 
 var table = new Table({
-    head: ["Item Id", "Product Name", "Price"],
+    head: ["Item Id", "Product Name", "Price", "Quantity"],
 
     style: {
         head: ['white'],
@@ -27,9 +27,9 @@ var connection = mysql.createConnection({
     database: "bamazon"
 });
 
-function afterConnection() {
+function productsSale() {
 
-    console.log("-----WELCOME TO BAMAZON!-----\n")
+    console.log("\n-----WELCOME TO BAMAZON!-----\n")
     connection.query("SELECT * FROM products", function (err, results) {
         if (err) throw err;
         for (var i = 0; i < results.length; i++) {
@@ -37,12 +37,30 @@ function afterConnection() {
             // console.log(results[i].product_name);
             // console.log(results[i].price);
             table.push(
-                [results[i].item_id, results[i].product_name, results[i].price]
+                [results[i].item_id, results[i].product_name, results[i].price, results[i].stock_quantity]
             );
         }
         console.log(table.toString());
 
     });
+    optionsMenu();
+};
+
+function lowInventory(){
+    connection.query("SELECT * FROM products", function (err, results) {
+        if (err) throw err;
+        for (var i = 0; i < results.length; i++) {
+            // console.log(results[i].item_id);
+            // console.log(results[i].product_name);
+            // console.log(results[i].price);
+            table.push(
+                [results[i].item_id, results[i].product_name, results[i].price, results[i].stock_quantity]
+            );
+        }
+        console.log(table.toString());
+
+    });
+    optionsMenu();
 }
 
 //productsSale function that will list the products for sale
@@ -81,7 +99,6 @@ var optionsMenu = function () {
     connection.connect(function (err) {
         if (err) throw err;
         console.log("connected as id " + connection.threadId);
-        afterConnection();
         optionsMenu();
     });
 
