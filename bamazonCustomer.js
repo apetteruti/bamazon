@@ -57,13 +57,12 @@ connection.connect(function (err) {
 });
 
 
-//   6. The app should then prompt users with two messages.
-
-//    * The first should ask them the ID of the product they would like to buy.
 
 function buyProduct() {
+  
 
   inquirer.prompt([{
+
       name: "id_item",
       type: "input",
       message: "Referring to the list above, what is the ID number of the ITEM you would like to purchase?",
@@ -72,7 +71,7 @@ function buyProduct() {
           return true;
         }
         return false;
-      }
+      },
     },
     {
       //The user is asked the amount
@@ -86,6 +85,7 @@ function buyProduct() {
         return false;
       }
     }
+    
 
   ]).then(function (answer) {
       console.log("You chose item number: " + answer.id_item + " and you would like " + answer.amount + " of them");
@@ -153,7 +153,8 @@ function buyProduct() {
 
         }
       )
-  })
+  });
+
 }
 
 

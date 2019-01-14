@@ -1,6 +1,4 @@
-# bamazon
-
-##Introduction
+## Introduction
 
 Looking for a one-stop-shop for lipstick and an Optimus Prime Transformer? Search no further! Bamazon is your store. This application allows the user to search for an item using a provided ID number, enter a quanitity, determine if there are enough stock, and, if so, report the price. 
 
