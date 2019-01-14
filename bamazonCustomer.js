@@ -1,5 +1,17 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require ("cli-table");
+
+var table = new Table({
+  head: ["Item Id", "Product Name", "Price"],
+      
+      style: {
+        head: ['white'],
+        compact: false,
+        colAligns: ["center"]
+      }
+
+    });
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -20,13 +32,20 @@ var connection = mysql.createConnection({
 // Include the ids, names, and prices of products for sale.
 
 function afterConnection() {
+
+  console.log ("-----WELCOME TO BAMAZON!-----")
+  
   connection.query("SELECT * FROM products", function (err, results) {
     if (err) throw err;
     for (var i = 0; i < results.length; i++) {
-      console.log(results[i].item_id);
-      console.log(results[i].product_name);
-      console.log(results[i].price);
+         // console.log(results[i].item_id);
+      // console.log(results[i].product_name);
+      // console.log(results[i].price);
+      table.push(
+        [results [i].item_id, results[i].product_name, results[i].price]
+      );
     }
+    console.log(table.toString());
     buyProduct();
   });
 }
