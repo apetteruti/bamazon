@@ -83,30 +83,38 @@ function buyProduct() {
 
             if (results[i].item_id === parseInt(answer.id_item)) {
               var chosenItem = results[i].item_id;
-              console.log (chosenItem);
+              // console.log (chosenItem);
               var chosenStock = results[i].stock_quantity;
-              console.log(chosenStock);
+              // console.log(chosenStock);
+              var chosenPrice = results[i].price;
+              // console.log(chosenPrice);
 
               if (chosenStock >= parseInt(answer.amount)){
-                console.log (chosenStock- answer.amount);
+                // console.log (chosenStock- answer.amount);
                 var newQuantity = chosenStock- answer.amount;
 
                 connection.query(
-                  "UPDATE products SET ? WHERE ?", [{
-                    stock_quantity: newQuantity
-                  },
-                {
-                  item_id: answer.id_item
-                }
-                ],
-
+                  "UPDATE products SET stock_quantity = ? WHERE item_id = ?", 
+                  
+                  [newQuantity, answer.id_item],
+            
                 function (err) {
                   if (err) throw err;
                   console.log("Purchase completed! There are now " + newQuantity + " remaining")
                 }
-
                 )
 
+                //Calculate purchase price based on the item ID that was selected
+                connection.query("SELECT price FROM products WHERE ?", [
+                  answer.id_item
+                ],
+                  function (err) {
+                    if (err) throw err;
+                    var cost = chosenPrice * answer.amount;
+                    console.log("Your total cost is $" + cost);
+                  }
+                  //create variable to hold the price amount and then report it
+                ); 
 
               }
             }
@@ -114,33 +122,12 @@ function buyProduct() {
             // else{
             //   console.log ("The item number you entered was not found. Please try again.")
 
-            // }
+             
 
-              // console.log (results[i].item_id + " & " + answer.id_item);
-              // purchaseSuccess();
-
-
-            function purchaseSuccess() {
-              
-
-                //Calculate purchase price based on the item ID that was selected
-                connection.query("SELECT price FROM products WHERE ?", [
-                  {
-                    item_id: answer.id_item
-                  }
-                ],
-                  function (err) {
-                    if (err) throw err;
-                    console.log("err in finding the price of the item");
-                    var cost = results[i].price * answer.amount;
-                    console.log("Your total cost is " + cost);
-                  }
-                  //create variable to hold the price amount and then report it
-                ); 
                 
                 // connection.end();
               
-            };
+          
           };
           // }
 
