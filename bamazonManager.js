@@ -90,24 +90,41 @@ function addInventory() {
 
         ]).then(function (answer) {
 
-                // connection.query ("SELECT stock_quantity FROM products WHERE item_id = ?", 
-                //  function(error, results){
-                //      if(error) throw err;
-                //      var newStock = answer.item_amount + stock_quantity;
-                //      console.log (newStock);
-                     
-                     connection.query("UPDATE products SET stock_quantity = ? WHERE item_id = ?,",
-                     [(stock_quantity + answer.item_amount), answer.input_product],
-                     
-                     function (error, results) {
-                         if (error) throw err;
-                         console.log (answer.input_product + "has been updated and how has " + stock_quantity);
-                         
-                        });
-                    }
-                    )
+                connection.query ("SELECT stock_quantity FROM products WHERE item_id = ?", 
+                [answer.input_product],
 
-                // })
+                 function(error, results){
+                     if(error) throw err;
+
+                     for(stock_quantity in results) {
+                        if(results.hasOwnProperty(stock_quantity)) {
+                            var value = results[stock_quantity];
+                            //do something with value;
+                            console.log(value);
+                            var currentStock = Object.values(value);
+                            console.log(currentStock);
+                            var currentStock2 = parseInt(currentStock.toString());
+                            console.log(currentStock2);
+                           
+                            var newStock = currentStock2 + parseInt(answer.item_amount);
+                            console.log(newStock);
+                        }
+                    }
+
+                    
+                    connection.query("UPDATE products SET stock_quantity = ? WHERE item_id = ?",
+                    [newStock, answer.input_product],
+                    
+                    function (err) {
+                        if (err) throw err;
+                        console.log(newStock);
+                        console.log (answer.input_product + " has been updated and now has " + newStock );
+                        connection.end();
+                        
+                    });
+                });
+
+                })
             }
 
 
@@ -130,9 +147,11 @@ function addInventory() {
                             break;
                         case "Add to Inventory":
                             addInventory();
+                            break;
 
                         case "Add new Product":
                             addProduct();
+                            break;
 
                     }
 
